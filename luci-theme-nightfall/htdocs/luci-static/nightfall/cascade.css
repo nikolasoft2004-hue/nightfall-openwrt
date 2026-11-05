@@ -3881,7 +3881,7 @@ img[src*="/icons/signal-"] { width: 24px; height: 24px; }
 .nf-spark .nf-c-down { color: var(--nf-g-down); stroke: var(--nf-g-down); }
 .nf-spark .nf-c-up { color: var(--nf-g-up); stroke: var(--nf-g-up); }
 .nf-spark .nf-c-cpu { color: var(--nf-g-3); stroke: var(--nf-g-3); }
-.nf-spark .nf-c-temp { color: var(--nf-g-warn); stroke: var(--nf-g-warn); }
+.nf-spark .nf-c-temp { color: var(--nf-g-temp, var(--nf-g-warn)); stroke: var(--nf-g-temp, var(--nf-g-warn)); }
 .nf-spark .nf-c-mem { color: var(--nf-g-4); stroke: var(--nf-g-4); }
 .nf-spark path.a.nf-c-down, .nf-spark path.a.nf-c-up { display: none; }
 .nf-live-grid .nf-tile[data-tile="net"] .nf-spark path.a { display: block; }
@@ -4446,7 +4446,7 @@ html[data-nf-style="glass"] .nf-dlg { background: color-mix(in srgb, var(--nf-fl
 .nf-dchart .nf-c-down, .nf-dleg .nf-c-down, .nf-dtip .nf-c-down { color: var(--nf-g-down); stroke: var(--nf-g-down); }
 .nf-dchart .nf-c-up, .nf-dleg .nf-c-up, .nf-dtip .nf-c-up { color: var(--nf-g-up); stroke: var(--nf-g-up); }
 .nf-dchart .nf-c-cpu, .nf-dleg .nf-c-cpu, .nf-dtip .nf-c-cpu { color: var(--nf-g-3); stroke: var(--nf-g-3); }
-.nf-dchart .nf-c-temp, .nf-dleg .nf-c-temp, .nf-dtip .nf-c-temp { color: var(--nf-g-warn); stroke: var(--nf-g-warn); }
+.nf-dchart .nf-c-temp, .nf-dleg .nf-c-temp, .nf-dtip .nf-c-temp { color: var(--nf-g-temp, var(--nf-g-warn)); stroke: var(--nf-g-temp, var(--nf-g-warn)); }
 .nf-dchart .nf-c-mem, .nf-dleg .nf-c-mem, .nf-dtip .nf-c-mem { color: var(--nf-g-4); stroke: var(--nf-g-4); }
 .nf-dleg i, .nf-dtip i { stroke: none; }
 .nf-dtip { position: absolute; top: 6px; z-index: 3; padding: 7px 10px; border-radius: 10px; font-size: calc(12px * var(--nf-fsz, 1)); line-height: 1.5; white-space: nowrap; pointer-events: none; background: var(--nf-flyout, var(--nf-card)); border: 1px solid var(--nf-stroke-strong); box-shadow: 0 8px 24px rgba(0, 0, 0, .25); }
@@ -5111,9 +5111,9 @@ html[data-nf-login-bg="tod"] body.nf-blank .modal.login label.cbi-value-title, h
 }
 
 /* ======== v20261105d: компактные «Применить / Сохранить / Сброс» на странице Tachyon ======== */
+html body #cbi-tachyon ~ .cbi-page-actions { display: flex; }
 html body #view > .cbi-page-actions,
 html body #cbi-tachyon ~ .cbi-page-actions {
-	display: flex !important;
 	flex-wrap: nowrap !important;
 	align-items: center !important;
 	justify-content: flex-end !important;
@@ -5275,9 +5275,9 @@ html[data-nf-style="mac"] .nf-seg button[aria-pressed="true"] { background: var(
 
 /* ---- палитры графиков (данные рисуются классами nfm-c-*, nf-c-*) ---- */
 :root[data-nf-gpal="vivid"] { --nf-g-down: #0a84ff; --nf-g-up: #30d158; --nf-g-3: #bf5af2; --nf-g-4: #ff9f0a; --nf-g-bad: #ff453a; --nf-g-warn: #ffd60a; }
-:root[data-nf-gpal="mono"] { --nf-g-down: var(--nf-text); --nf-g-up: var(--nf-text-dim); --nf-g-3: color-mix(in srgb, var(--nf-text) 45%, transparent); --nf-g-4: color-mix(in srgb, var(--nf-text) 28%, transparent); }
-:root[data-nf-gpal="warm"] { --nf-g-down: #f97316; --nf-g-up: #eab308; --nf-g-3: #ef4444; --nf-g-4: #ec4899; }
-:root[data-nf-gpal="cool"] { --nf-g-down: #06b6d4; --nf-g-up: #6366f1; --nf-g-3: #14b8a6; --nf-g-4: #8b5cf6; }
+:root[data-nf-gpal="mono"] { --nf-g-down: var(--nf-text); --nf-g-up: var(--nf-text-dim); --nf-g-3: color-mix(in srgb, var(--nf-text) 45%, transparent); --nf-g-4: color-mix(in srgb, var(--nf-text) 28%, transparent);  --nf-g-temp: color-mix(in srgb, var(--nf-text) 60%, transparent);}
+:root[data-nf-gpal="warm"] { --nf-g-down: #f97316; --nf-g-up: #eab308; --nf-g-3: #ef4444; --nf-g-4: #ec4899;  --nf-g-temp: #f59e0b;}
+:root[data-nf-gpal="cool"] { --nf-g-down: #06b6d4; --nf-g-up: #6366f1; --nf-g-3: #14b8a6; --nf-g-4: #8b5cf6;  --nf-g-temp: #0ea5e9;}
 
 /* ---- фоны экрана входа: дождь, закат, своё фото ---- */
 html[data-nf-login-bg="rain"] body.nf-blank { background: linear-gradient(180deg, #2b3548 0%, #151b28 100%); }
@@ -5318,3 +5318,16 @@ html:not([data-nf-motion="off"]) .cbi-section[data-nf-card] { transition: min-he
 .nf-dv-item .ic { width: 34px; height: 34px; }
 .nf-dv-item.off .ic, .nf-dv-item.gone .ic { color: var(--nf-text-dim); background: var(--nf-hover); }
 .nf-apps-n .nf-ic { width: 18px; height: 18px; color: var(--c); }
+
+/* v20261105j: стиль macOS: на окне входа вложенные блоки без теней и фона (иначе под полями виден второй фон) */
+html[data-nf-style="mac"] .modal.login .cbi-map, html[data-nf-style="mac"] .modal.login .cbi-section, html[data-nf-style="mac"] .modal.login .cbi-section-node,
+html[data-nf-style="mac"] body.nf-blank .modal.login .cbi-value { background: transparent !important; box-shadow: none !important; border: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+html[data-nf-style="mac"] .modal.login .cbi-section::before, html[data-nf-style="mac"] .modal.login .cbi-section::after, html[data-nf-style="mac"] .modal.login .cbi-map::before { display: none !important; }
+
+/* Подключённые клиенты: «Хост» в две строки (имя / IP · MAC), отдельный столбец MAC скрыт */
+.nf-hostmerged .th:nth-of-type(2), .nf-hostmerged th:nth-of-type(2), .nf-hostmerged .td:nth-of-type(2), .nf-hostmerged td:nth-of-type(2) { display: none !important; }
+.nf-host { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.nf-h1 { font-weight: 600; overflow-wrap: anywhere; line-height: 1.3; }
+.nf-h1ip { font-weight: 500; }
+.nf-h2 { font-size: calc(12px * var(--nf-fsz, 1)); color: var(--nf-text-dim); font-variant-numeric: tabular-nums; line-height: 1.3; overflow-wrap: anywhere; }
+.nf-h2m, .nf-h1ip .nf-h2m { color: var(--nf-text-dim); font-weight: 400; font-size: .9em; white-space: nowrap; }

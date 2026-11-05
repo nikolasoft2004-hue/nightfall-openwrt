@@ -697,6 +697,35 @@ function markNoWrap(view) {
 let STAB_GEN = 0, STAB_W = window.innerWidth;
 const STAB_MEM = {};   /* наибольшие размеры по id таблицы: LuCI создаёт таблицу заново при каждом опросе, память должна переживать смену элемента */
 window.addEventListener('resize', () => { if (Math.abs(window.innerWidth - STAB_W) > 2) { STAB_W = window.innerWidth; STAB_GEN++; } });
+/* смена размера карточек, плотности, шрифта или стиля в «Персонализации»: забываем накопленные минимумы, иначе таблицы остались бы прежнего размера */
+new MutationObserver(() => {
+	STAB_GEN++;
+	const v = document.getElementById('view');
+	if (v) { v.querySelectorAll('.cbi-section').forEach(c => { if (!c.classList.contains('nf-fixh')) c.style.minHeight = ''; }); window.setTimeout(() => { stabilizeTables(v); window.dispatchEvent(new Event('resize')); }, 120); }
+}).observe(document.documentElement, { attributes: true, attributeFilter: [ 'data-nf-ov-size', 'data-nf-density', 'data-nf-font', 'data-nf-style', 'data-nf-radius', 'data-nf-fsz', 'data-nf-ovwide', 'style' ] });
+/* «Подключённые клиенты»: имя узла в первой строке, ниже IP и MAC (отдельный столбец MAC скрывается) */
+function decorateHosts(view) {
+	view.querySelectorAll('#wifi_assoclist_table').forEach(tb => {
+		let any = false;
+		tb.querySelectorAll('tr.tr, .tr').forEach(r => {
+			if (r.classList.contains('table-titles') || r.querySelector(':scope > .th, :scope > th')) return;
+			const c = r.querySelectorAll(':scope > .td, :scope > td');
+			if (c.length < 3 || c[2].querySelector('.nf-host')) { if (c.length >= 3) any = true; return; }
+			const mac = (c[1].textContent || '').trim(), raw = (c[2].textContent || '').trim();
+			const m = /^(.+?)\s*\(([^)]*)\)\s*$/.exec(raw);
+			const name = m ? m[1] : '', addrs = (m ? m[2] : raw).split(/\s*,\s*/).filter(Boolean);
+			const v4 = addrs.find(a => /^\d+\.\d+\.\d+\.\d+$/.test(a)) || addrs[0] || '';
+			const wrap = E('div', { class: 'nf-host', title: raw }), isMac = x => x && /^[0-9a-f]{2}(:[0-9a-f]{2}){5}$/i.test(x);
+			if (name) {
+				wrap.appendChild(E('div', { class: 'nf-h1' }, name));
+				wrap.appendChild(E('div', { class: 'nf-h2' }, [ v4, isMac(mac) ? E('span', { class: 'nf-h2m' }, ' · ' + mac) : '' ]));
+			} else wrap.appendChild(E('div', { class: 'nf-h1 nf-h1ip' }, [ v4 || '?', isMac(mac) ? E('span', { class: 'nf-h2m' }, ' · ' + mac) : '' ]));
+			c[2].textContent = ''; c[2].appendChild(wrap);
+			any = true;
+		});
+		tb.classList.toggle('nf-hostmerged', any);
+	});
+}
 function stabilizeTables(view) {
 	view.querySelectorAll('.table').forEach(tb => {
 		if (!tb.querySelector('.td[data-title], td')) return;
@@ -1536,7 +1565,7 @@ return baseclass.extend({
 			decorateCards(view);
 			syncPins(view);
 			syncSizes(view);
-			markNoWrap(view);
+			markNoWrap(view); decorateHosts(view);
 			enhanceBadges(view);
 			relayout();
 		};
@@ -1547,7 +1576,7 @@ return baseclass.extend({
 		};
 		new MutationObserver(muts => {
 			const own = muts.every(m => (strip && strip.el.contains(m.target)) || extras.some(x => x.contains(m.target)) || (m.target === view && DRAG));
-			if (!own) { enhanceBadges(view); markNoWrap(view); stabilizeTables(view); }
+			if (!own) { enhanceBadges(view); markNoWrap(view); decorateHosts(view); stabilizeTables(view); }
 			schedule(muts);
 		}).observe(view, { childList: true, subtree: true, characterData: true });
 		/* значки сигнала и Wi-Fi в таблицах догружаются уже после вставки строк: учитываем их размер сразу, не ждать следующего опроса */
